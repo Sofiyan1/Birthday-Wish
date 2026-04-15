@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nikah Invitation | Aaryan & Ishani</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@0;1&family=Great+Vibes&family=Noto+Nastaliq+Urdu:wght@400;700&family=Playfair+Display:wght@700;900&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --emerald-green: #004d40;
+            --gold: #d4af37;
+            --dark-gold: #996515;
+            --silk-cream: #fffdf5;
+            --royal-shadow: 0 20px 50px rgba(0,0,0,0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #021a11;
+            font-family: 'Montserrat', sans-serif;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+
+        /* --- Canvas for Floating Gold Dust --- */
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            z-index: -1;
+            background: radial-gradient(circle at center, #00332c 0%, #01110b 100%);
+        }
+
+        /* --- SHAHI GATE ENTRANCE (Center Opening) --- */
+        #shahi-gate {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 10000;
+            display: flex;
+            transition: 1.8s cubic-bezier(0.7, 0, 0.2, 1);
+        }
+
+        .gate {
+            width: 50%; height: 100%;
+            background: var(--emerald-green);
+            border: 12px double var(--gold);
+            position: relative;
+            display: flex;
+            align-items: center;
+            transition: 1.8s cubic-bezier(0.7, 0, 0.2, 1);
+        }
+
+        .gate-left { border-right: 3px solid var(--gold); justify-content: flex-end; }
+        .gate-right { border-left: 3px solid var(--gold); justify-content: flex-start; }
+
+        .gate-pattern {
+            position: absolute;
+            width: 100%; height: 100%;
+            opacity: 0.15;
+            background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
+        }
+
+        .gate-open .gate-left { transform: translateX(-100%) rotateY(-20deg); }
+        .gate-open .gate-right { transform: translateX(100%) rotateY(20deg); }
+
+        /* --- THE ROYAL SEAL (Click Me) --- */
+        .royal-seal-wrapper {
+            position: absolute;
+            left: 50%; top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10001;
+            transition: 0.8s;
+        }
+
+        .seal {
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, #f9d976, #b8860b);
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 0 50px var(--gold);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 30px var(--gold); }
+            50% { transform: scale(1.08); box-shadow: 0 0 60px var(--gold); }
+            100% { transform: scale(1); box-shadow: 0 0 30px var(--gold); }
+        }
+
+        /* --- MAIN CARD --- */
+        #nikah-card {
+            display: none;
+            width: 100%;
+            position: relative;
+        }
+
+        .section {
+            min-height: 100vh;
+            padding: 80px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .glass-plate {
+            background: rgba(255, 253, 245, 0.95);
+            width: 100%;
+            max-width: 850px;
+            padding: 60px 40px;
+            border-radius: 30px;
+            border: 3px solid var(--gold);
+            box-shadow: var(--royal-shadow);
+            text-align: center;
+            position: relative;
+            backdrop-filter: blur(15px);
+        }
+
+        /* --- TYPOGRAPHY --- */
+        .urdu-text { font-family: 'Noto Nastaliq Urdu', serif; color: var(--emerald-green); }
+        .hindi-text { font-family: 'Montserrat', sans-serif; font-weight: 600; }
+        
+        .bismillah {
+            font-size: 2.5rem;
+            color: var(--dark-gold);
+            margin-bottom: 20px;
+        }
+
+        .names {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(3rem, 10vw, 5.5rem);
+            color: var(--emerald-green);
+            margin: 15px 0;
+        }
+
+        .referral-banner {
+            background: var(--emerald-green);
+            color: var(--gold);
+            padding: 8px 30px;
+            border-radius: 50px;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 30px;
+            border: 1px solid var(--gold);
+        }
+
+        /* --- 2D CHARACTERS --- */
+        .char-box { display: flex; justify-content: center; gap: 30px; margin: 20px 0; }
+        .char { font-size: 70px; animation: bounce 3s infinite ease-in-out; }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* --- EVENT DETAILS BOX --- */
+        .event-card {
+            background: #f1f8e9;
+            border: 1px solid var(--gold);
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 15px;
+        }
+
+        .btn-location {
+            background: var(--emerald-green);
+            color: var(--gold);
+            padding: 12px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+
+        /* --- PETAL RAIN --- */
+        .petal {
+            position: fixed;
+            top: -50px;
+            z-index: 5;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall { to { transform: translateY(110vh) rotate(540deg); } }
+
+        /* --- REVEAL ANIMATION --- */
+        .reveal { opacity: 0; transform: translateY(50px); transition: 1.5s; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        footer {
+            background: #01110b;
+            color: var(--gold);
+            padding: 60px 20px;
+            text-align: center;
+            border-top: 5px solid var(--gold);
+        }
+
+        @media (max-width: 600px) {
+            .glass-plate { padding: 30px 15px; }
+            .names { font-size: 2.8rem; }
+            .bismillah { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div id="shahi-gate">
+        <div class="gate gate-left">
+            <div class="gate-pattern"></div>
+            <h1 style="color:var(--gold); font-family:'Amiri'; font-size:80px; margin-right:20px;">ن</h1>
+        </div>
+        
+        <div class="royal-seal-wrapper" id="openAction">
+            <div class="seal">
+                <span style="font-size:12px; letter-spacing:3px; color:white;">دعوۃ نامہ</span>
+                <span style="font-size:26px; color:white; font-weight:900;">NIKAH</span>
+                <span style="font-size:35px;">🌙</span>
+                <span style="font-size:10px; color:white; font-weight:bold;">किक्ल करें</span>
+            </div>
+        </div>
+
+        <div class="gate gate-right">
+            <div class="gate-pattern"></div>
+            <h1 style="color:var(--gold); font-family:'Amiri'; font-size:80px; margin-left:20px;">ن</h1>
+        </div>
+    </div>
+
+    <main id="nikah-card">
+        
+        <section class="section">
+            <div class="glass-plate reveal">
+                <div class="bismillah urdu-text">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
+                <div class="referral-banner" id="guest-tag">ख़ास मेहमान</div>
+                
+                <p class="hindi-text" style="color:#555; letter-spacing:2px;">अल्लाह के नाम से शुरू जो बड़ा मेहरबान निहायत रहम वाला है</p>
+                
+                <div class="char-box">
+                    <div class="char">🤵‍♂️</div>
+                    <div class="char" style="animation-delay: 0.5s;">👰‍♀️</div>
+                </div>
+
+                <h1 class="names">Aaryan & Ishani</h1>
+                
+                <h3 class="urdu-text" style="font-size: 1.8rem; margin: 10px 0;">نکاح کی تقریب</h3>
+                <p class="hindi-text" style="font-size: 1.2rem; color: var(--emerald-green);">निकाह की इस मुबारक घड़ी में आप सादर आमंत्रित हैं</p>
+                
+                <div style="margin-top: 40px; animation: bounce 2s infinite;">
+                    <p style="font-size: 10px; letter-spacing: 2px;">नीचे स्क्रॉल करें</p>
+                    <span style="color:var(--gold)">▼</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="glass-plate reveal">
+                <h2 class="urdu-text" style="font-size: 2.5rem; border-bottom: 2px solid var(--gold); display: inline-block; padding-bottom: 10px;">پروگرام</h2>
+                
+                <div class="event-card">
+                    <h3 style="color:var(--emerald-green); font-size: 1.8rem;">निकाह (Nikah)</h3>
+                    <p class="hindi-text"><b>24 दिसंबर, 2026 | गुरुवार</b></p>
+                    <p>बारात रवानगी: शाम 06:00 बजे</p>
+                    <p>निकाह की रस्म: रात 09:00 बजे</p>
+                    <p>स्थान: इम्पीरियल गार्डन, राजपथ रोड, पटना</p>
+                    <a href="#" class="btn-location">गूगल मैप पर देखें</a>
+                </div>
+
+                <div class="event-card">
+                    <h3 style="color:var(--emerald-green); font-size: 1.8rem;">वलीमा (Walima)</h3>
+                    <p class="hindi-text"><b>26 दिसंबर, 2026 | शनिवार</b></p>
+                    <p>समय: रात 08:00 बजे से</p>
+                    <p>स्थान: हेरिटेज हॉल, होटल मौर्या, पटना</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="glass-plate reveal">
+                <span style="font-size: 50px;">🤲</span>
+                <h2 class="hindi-text" style="color:var(--emerald-green); margin-bottom: 20px;">दुआ की गुज़ारिश</h2>
+                <p style="line-height: 1.8; color: #444;">"ऐ अल्लाह! इन दोनों के दरमियान अटूट मोहब्बत और बरकत अता फरमा।" (आमीन)</p>
+                
+                <div style="margin-top: 50px;">
+                    <p style="font-size: 0.9rem; color: #888;">ज़ेर-ए-एहतिमाम (Regards):</p>
+                    <h3 class="hindi-text" style="font-size: 1.6rem; color: var(--emerald-green); margin-top: 10px;">शर्मा एवं वर्मा परिवार</h3>
+                    <p class="urdu-text" style="font-size: 1.4rem; margin-top: 5px;">شرما اور ورما خاندان</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <h1 class="urdu-text" style="font-size: 3rem;">خوش آمدید</h1>
+            <p style="margin-top: 15px; letter-spacing: 3px; font-size: 12px; opacity: 0.7;">#AaryanWedsIshani | 2026</p>
+        </footer>
+
+    </main>
+
+    <script>
+        /* --- 1. DYNAMIC BACKGROUND (GOLD DUST) --- */
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let dots = [];
+
+        function init() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            dots = [];
+            for(let i=0; i<120; i++) {
+                dots.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: Math.random() * 2,
+                    s: Math.random() * 0.5 + 0.2
+                });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(212, 175, 55, 0.4)";
+            dots.forEach(d => {
+                ctx.beginPath();
+                ctx.arc(d.x, d.y, d.r, 0, Math.PI*2);
+                ctx.fill();
+                d.y -= d.s;
+                if(d.y < 0) d.y = canvas.height;
+            });
+            requestAnimationFrame(draw);
+        }
+        window.onresize = init;
+        init(); draw();
+
+        /* --- 2. ENTRANCE LOGIC --- */
+        const openBtn = document.getElementById('openAction');
+        const gate = document.getElementById('shahi-gate');
+        const card = document.getElementById('nikah-card');
+
+        openBtn.onclick = () => {
+            openBtn.style.transform = "translate(-50%, -50%) scale(0)";
+            openBtn.style.opacity = "0";
+            setTimeout(() => {
+                gate.classList.add('gate-open');
+                setTimeout(() => {
+                    gate.style.display = "none";
+                    card.style.display = "block";
+                    startPetals();
+                    reveal();
+                }, 1500);
+            }, 500);
+        };
+
+        /* --- 3. REFERRAL LOGIC --- */
+        const name = new URLSearchParams(window.location.search).get('name');
+        if(name) {
+            document.getElementById('guest-tag').innerText = "ख़ास मेहमान: " + name.toUpperCase();
+        }
+
+        /* --- 4. FLOWER RAIN (PETALS) --- */
+        function startPetals() {
+            const icons = ['🌸', '✨', '🍃', '⭐'];
+            setInterval(() => {
+                const p = document.createElement('div');
+                p.className = 'petal';
+                p.innerText = icons[Math.floor(Math.random()*icons.length)];
+                p.style.left = Math.random() * 100 + "vw";
+                p.style.fontSize = Math.random()*20 + 15 + "px";
+                p.style.animationDuration = Math.random()*3 + 4 + "s";
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 6000);
+            }, 600);
+        }
+
+        /* --- 5. SCROLL REVEAL --- */
+        function reveal() {
+            document.querySelectorAll('.reveal').forEach(el => {
+                if(el.getBoundingClientRect().top < window.innerHeight - 100) {
+                    el.classList.add('active');
+                }
+            });
+        }
+        window.onscroll = reveal;
+
+        /* --- 6. CLICK SPARKLE --- */
+        window.onclick = (e) => {
+            const s = document.createElement('div');
+            s.style.position = 'fixed';
+            s.style.left = e.clientX + 'px';
+            s.style.top = e.clientY + 'px';
+            s.innerText = '✨';
+            s.style.fontSize = '25px';
+            s.style.pointerEvents = 'none';
+            document.body.appendChild(s);
+            let p = 0;
+            const i = setInterval(() => {
+                if(p==40) { clearInterval(i); s.remove(); }
+                else { p++; s.style.top = (e.clientY - p) + 'px'; s.style.opacity = 1 - p/40; }
+            }, 10);
+        };
+    </script>
+</body>
+</html>
